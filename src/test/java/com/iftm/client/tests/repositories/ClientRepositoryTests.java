@@ -23,17 +23,21 @@ public class ClientRepositoryTests {
 	private long nonExistingId;
 	private long countTotalClients;
 	private long countClientByIncome;
-	private String existingName, nonExistingName;
+	private long countClientByname;
+	private String existingName, nonExistingName, existingNameIgnoreCase, nameIsEmppty;
 	private String existingBirthDate, nonexistingBirthDate;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = Long.MAX_VALUE;
-		existingName = "Jimmy";
+		existingName = "Carolina";
+		existingNameIgnoreCase = "cAroLina";
 		nonExistingName = "Fail";
 		countTotalClients = 12L;
 		countClientByIncome = 5L;
+		countClientByname = 1L;
+		nameIsEmppty = "";
 	}
 
 	@Test
@@ -49,7 +53,7 @@ public class ClientRepositoryTests {
 			repository.deleteById(nonExistingId);
 		});
 	}
-	
+
 	@Test
 	public void saveShouldPersistWithAutoIncrementWhenIdIsNull() {
 		Client client = ClientFactory.createClient();
@@ -61,37 +65,56 @@ public class ClientRepositoryTests {
 		Assertions.assertTrue(result.isPresent());
 		Assertions.assertSame(result.get(), client);
 	}
-	
+
 	@Test
 	public void findByIncomeShouldReturnClientsWhenClientIncomeIsGreaterThanOrEqualsToValue() {
 		Double income = 4000.0;
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		Page<Client> result = repository.findByIncome(income, pageRequest);
-	Assertions.assertFalse(result.isEmpty());
+		Assertions.assertFalse(result.isEmpty());
 		Assertions.assertEquals(countClientByIncome, result.getTotalElements());
 	}
+	
+	/*************************************/
+	/*Atividade: testes em JPA Repository*/
+	/*************************************/
+	
 	@Test
-	public void findByNameShouldFindWhenNameExists() {
-		repository.findByName(existingName);
-		Optional<Client> list = Optional.empty();
-
-		Assertions.assertFalse(list.isPresent());
-
+	public void findByNameShouldReturnClientsWhenNameExists() {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByName(existingName, pageRequest);
+		Assertions.assertEquals(countClientByname, result.getTotalElements());
+	}
+	@Test
+	public void findByNameShouldReturnAllClientsWhenNameIsEmpty() {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByName(nameIsEmppty, pageRequest);
+		Assertions.assertEquals(countTotalClients, result.getTotalElements());
+		Assertions.assertFalse(result.isEmpty());
+	}
+	@Test
+	public void findByNameShouldReturnAllClientsWhenExistingNameIgnoreCase() {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByName(existingNameIgnoreCase, pageRequest);
+		Assertions.assertEquals(countClientByname, result.getTotalElements());
+		Assertions.assertFalse(result.isEmpty());
 	}
 
 	@Test
-	public void findByNameShouldThrowExceptionWhenNameDoesNotExists() {
-
-		repository.findByName(nonExistingName);
+	public void findByNameShouldReturnEmptyWhenNameDoesNotExists() {
+			PageRequest pageRequest = PageRequest.of(0, 10);
+			Page<Client> result = repository.findByName(nonExistingName, pageRequest);
+			Assertions.assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void findByBirthDateShouldFindWhenBirthDateExists() {
-		repository.findByBirthDate(existingBirthDate);
-		Optional<Client> list = Optional.empty();
-
-		Assertions.assertFalse(list.isPresent());
-
+	public void updateShouldChangeRegisterWhenIdExistis() {
+	
+		Optional<Client> result = repository.findById(existingId);
+		Assertions.assertNotNull(existingId);
+//		Assertions.assertEquals(countTotalClients, existingId);
+		Assertions.assertTrue(result.isPresent());
+//		Assertions.assertSame(result.get(), existingId);
 	}
 
 }

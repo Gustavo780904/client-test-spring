@@ -1,6 +1,6 @@
 package com.iftm.client.repositories;
 
-import java.util.List;
+import java.time.Instant;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,11 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 			+ "obj.income >= :income") 
 	Page<Client> findByIncome(Double income, Pageable pageable);
 	
-	List<Client> findByName(String name);
+//	List<Client> findByNameContainingIgnoreCase(String name);
 	
-	List<Client> findByBirthDate(String birthDate);
+	@Query("select obj from Client obj where lower(obj.name) like lower(concat('%', :name,'%'))")
+	Page<Client> findByName(String name, Pageable pageable);
+	
+	@Query("select obj from Client obj where year(obj.birthDate)=?1")
+	Page<Client> findByBirthDate(String birthdate, Pageable pageable);
 }

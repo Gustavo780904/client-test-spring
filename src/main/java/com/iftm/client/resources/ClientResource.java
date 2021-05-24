@@ -1,7 +1,7 @@
 package com.iftm.client.resources;
 
 import java.net.URI;
-import java.util.List;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.iftm.client.dto.ClientDTO;
-import com.iftm.client.entities.Client;
 import com.iftm.client.services.ClientService;
 
 @RestController
@@ -80,12 +79,30 @@ public class ClientResource {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	@GetMapping("/{name}")
-	public List<Client> findByName(@RequestBody String name) {
-		return service.findByName(name);
+	@GetMapping(value = "/find-by-name")
+	public ResponseEntity<Page<ClientDTO>> findByName(
+			@RequestParam(value = "name", defaultValue = "")String name,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
+	{
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Page<ClientDTO> list = service.findByName(name, pageRequest);
+		return ResponseEntity.ok().body(list); 
 	}
-	@GetMapping("/{birthDate}")
-	public List<Client> findByBirthDate(@RequestBody String birthDate) {
-		return service.findByName(birthDate);
+
+	@GetMapping(value = "/find-by-birthdate")
+	public ResponseEntity<Page<ClientDTO>> findByBirthDate(
+			@RequestParam(value = "birthdate", defaultValue = "")String birthdate,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "13") Integer linesPerPage,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
+	{
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Page<ClientDTO> list = service.findByBirthDate(birthdate, pageRequest);
+		return ResponseEntity.ok().body(list); 
 	}
+
 }
