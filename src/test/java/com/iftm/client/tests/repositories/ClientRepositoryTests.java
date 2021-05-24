@@ -1,7 +1,5 @@
 package com.iftm.client.tests.repositories;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import com.iftm.client.entities.Client;
 import com.iftm.client.repositories.ClientRepository;
@@ -28,8 +25,10 @@ public class ClientRepositoryTests {
 	private long countTotalClients;
 	private long countClientByIncome;
 	private long countClientByname;
+	private long countClientByBirthDateYear;
+	private Integer birthDateYear;
+	private Integer yearWithoutBirth;
 	private String existingName, nonExistingName, existingNameIgnoreCase, nameIsEmppty;
-	private String existingBirthDate, nonexistingBirthDate;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -41,6 +40,9 @@ public class ClientRepositoryTests {
 		countTotalClients = 12L;
 		countClientByIncome = 5L;
 		countClientByname = 1L;
+		countClientByBirthDateYear = 1L;
+		birthDateYear = 1949;
+		yearWithoutBirth = 1946;
 		nameIsEmppty = "";
 	}
 
@@ -109,6 +111,19 @@ public class ClientRepositoryTests {
 	public void findByNameShouldReturnEmptyWhenNameDoesNotExists() {
 			PageRequest pageRequest = PageRequest.of(0, 10);
 			Page<Client> result = repository.findByName(nonExistingName, pageRequest);
+			Assertions.assertTrue(result.isEmpty());
+	}
+	
+	@Test 
+	public void findByBirthdateShouldReturnClientThatYearIsEquals() {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByBirthDateYear(birthDateYear, pageRequest);
+		Assertions.assertEquals(countClientByBirthDateYear, result.getTotalElements());
+	}
+	@Test
+	public void findByBirthdateShouldReturnEmptyWhenNobodyClientToYear() {
+			PageRequest pageRequest = PageRequest.of(0, 10);
+			Page<Client> result = repository.findByBirthDateYear(yearWithoutBirth, pageRequest);
 			Assertions.assertTrue(result.isEmpty());
 	}
 

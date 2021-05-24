@@ -23,5 +23,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 	Page<Client> findByName(String name, Pageable pageable);
 	
 	@Query("select obj from Client obj where year(obj.birthDate)=?1")
-	Page<Client> findByBirthDate(String birthdate, Pageable pageable);
+	Page<Client> findByBirthDateYear(Integer birthdate, Pageable pageable);
 }

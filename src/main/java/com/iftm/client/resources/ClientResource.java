@@ -1,7 +1,6 @@
 package com.iftm.client.resources;
 
 import java.net.URI;
-import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -92,16 +91,16 @@ public class ClientResource {
 		return ResponseEntity.ok().body(list); 
 	}
 
-	@GetMapping(value = "/find-by-birthdate")
-	public ResponseEntity<Page<ClientDTO>> findByBirthDate(
-			@RequestParam(value = "birthdate", defaultValue = "")String birthdate,
+	@GetMapping(value = "/find-by-birthdateyear")
+	public ResponseEntity<Page<ClientDTO>> findByBirthDateYear(
+			@RequestParam(value = "birthdate", defaultValue = "")Integer year,
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "13") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
 			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
 	{
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		Page<ClientDTO> list = service.findByBirthDate(birthdate, pageRequest);
+		Page<ClientDTO> list = service.findByBirthDateYear(year, pageRequest);
 		return ResponseEntity.ok().body(list);
 	}
 

@@ -87,8 +87,8 @@ public class ClientService {
 		return list.map(x -> new ClientDTO(x));
 	}
 	@Transactional(readOnly = true)
-	public Page<ClientDTO> findByBirthDate(String birthdate, PageRequest pageRequest) {
-		Page<Client> list =  repository.findByBirthDate(birthdate, pageRequest);
+	public Page<ClientDTO> findByBirthDateYear(Integer year, PageRequest pageRequest) {
+		Page<Client> list =  repository.findByBirthDateYear(year, pageRequest);
 		return list.map(x -> new ClientDTO(x));
 	}
 
