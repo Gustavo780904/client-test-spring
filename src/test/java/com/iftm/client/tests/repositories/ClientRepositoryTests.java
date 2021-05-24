@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.iftm.client.entities.Client;
 import com.iftm.client.repositories.ClientRepository;
@@ -18,8 +20,9 @@ public class ClientRepositoryTests {
 	@Autowired
 	private ClientRepository repository;
 	private long existingId;
-	private Long nonExistingId;
-	private Long countTotalClients;
+	private long nonExistingId;
+	private long countTotalClients;
+	private long countClientByIncome;
 	private String existingName, nonExistingName;
 	private String existingBirthDate, nonexistingBirthDate;
 
@@ -30,6 +33,7 @@ public class ClientRepositoryTests {
 		existingName = "Jimmy";
 		nonExistingName = "Fail";
 		countTotalClients = 12L;
+		countClientByIncome = 5L;
 	}
 
 	@Test
@@ -58,8 +62,14 @@ public class ClientRepositoryTests {
 		Assertions.assertSame(result.get(), client);
 	}
 	
-//	@Test
-//	public void 
+	@Test
+	public void findByIncomeShouldReturnClientsWhenClientIncomeIsGreaterThanOrEqualsToValue() {
+		Double income = 4000.0;
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByIncome(income, pageRequest);
+	Assertions.assertFalse(result.isEmpty());
+		Assertions.assertEquals(countClientByIncome, result.getTotalElements());
+	}
 	@Test
 	public void findByNameShouldFindWhenNameExists() {
 		repository.findByName(existingName);
