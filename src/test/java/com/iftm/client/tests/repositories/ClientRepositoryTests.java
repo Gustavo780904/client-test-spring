@@ -1,5 +1,8 @@
 package com.iftm.client.tests.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -10,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.iftm.client.entities.Client;
 import com.iftm.client.repositories.ClientRepository;
@@ -64,6 +68,7 @@ public class ClientRepositoryTests {
 		Assertions.assertEquals(countTotalClients + 1, client.getId());
 		Assertions.assertTrue(result.isPresent());
 		Assertions.assertSame(result.get(), client);
+		repository.delete(client);
 	}
 
 	@Test
@@ -108,13 +113,18 @@ public class ClientRepositoryTests {
 	}
 
 	@Test
-	public void updateShouldChangeRegisterWhenIdExistis() {
-	
+	public void updateShouldChangeAndPersistRegister() {
 		Optional<Client> result = repository.findById(existingId);
-		Assertions.assertNotNull(existingId);
-//		Assertions.assertEquals(countTotalClients, existingId);
+		result.get().setName("Carol");
+		repository.save(result.get());
+		List<Client> list = repository.findAll();
+		Assertions.assertNotNull(result.get());
+		Assertions.assertEquals(countTotalClients, list.size());
 		Assertions.assertTrue(result.isPresent());
-//		Assertions.assertSame(result.get(), existingId);
+		Assertions.assertSame(result.get().getName(), "Carol");
 	}
+	
+//	@Test
+//	public void update
 
 }
