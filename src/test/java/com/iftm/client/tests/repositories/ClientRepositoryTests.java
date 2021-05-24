@@ -28,6 +28,7 @@ public class ClientRepositoryTests {
 	private long countClientByname;
 	private long countClientByBirthDateYear;
 	private long countClientByBirthDateAfterYear;
+	private Integer year;
 	private Integer birthDateYear;
 	private Integer yearWithoutBirth;
 	private String existingName, nonExistingName, existingNameIgnoreCase, nameIsEmppty;
@@ -43,7 +44,8 @@ public class ClientRepositoryTests {
 		countClientByIncome = 5L;
 		countClientByname = 1L;
 		countClientByBirthDateYear = 1L;
-		countClientByBirthDateAfterYear = 9;
+		countClientByBirthDateAfterYear = 1L;
+		year = 2019;
 		birthDateYear = 1949;
 		yearWithoutBirth = 1946;
 		nameIsEmppty = "";
@@ -126,14 +128,14 @@ public class ClientRepositoryTests {
 	
 	/* Find data maior que a referência*/
 	
-//	@Test
-//	public void findByBirthDateAfterYearShouldReturnClientsWhenClientBirthDateAfterToValue() {
-//		Integer year = 1948;
-//		PageRequest pageRequest = PageRequest.of(0, 10);
-//		Page<Client> result = repository.findByBirthDateAfterYear(year, pageRequest);
-//		Assertions.assertFalse(result.isEmpty());
-//		Assertions.assertEquals(countClientByBirthDateAfterYear, result.getTotalElements());
-//	}
+	@Test
+	public void findByBirthDateAfterYearShouldReturnClientsWhenClientBirthDateAfterToValue() {		
+		
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByBirthDateAfterYear(year, pageRequest);
+		Assertions.assertFalse(result.isEmpty());
+		Assertions.assertEquals(countClientByBirthDateAfterYear, result.getTotalElements());
+	}
 	
 	/* Find birthdate por ano*/
 	
