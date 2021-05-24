@@ -1,6 +1,7 @@
 package com.iftm.client.tests.repositories;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -139,7 +140,13 @@ public class ClientRepositoryTests {
 		Assertions.assertSame(result.get().getName(), "Carol");
 	}
 	
-//	@Test
-//	public void update
+	@Test
+	public void updateShouldThrowExeptionWhenIdDoesNotExists() {
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+			Optional<Client> result = repository.findById(nonExistingId);
+			result.get().setName("Carol");
+			repository.save(result.get());
+		});
+	}
 
 }
