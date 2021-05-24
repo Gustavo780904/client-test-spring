@@ -21,30 +21,30 @@ import com.iftm.client.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClientService {
-	
+
 	@Autowired
 	private ClientRepository repository;
-	
+
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
-		Page<Client> list =  repository.findAll(pageRequest);
+		Page<Client> list = repository.findAll(pageRequest);
 		return list.map(x -> new ClientDTO(x));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public ClientDTO findById(Long id) {
 		Optional<Client> obj = repository.findById(id);
 		Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new ClientDTO(entity);
 	}
-	
+
 	@Transactional
 	public ClientDTO insert(ClientDTO dto) {
 		Client entity = dto.toEntity();
 		entity = repository.save(entity);
 		return new ClientDTO(entity);
 	}
-	
+
 	@Transactional
 	public ClientDTO update(Long id, ClientDTO dto) {
 		try {
@@ -56,7 +56,7 @@ public class ClientService {
 			throw new ResourceNotFoundException("Id not found " + id);
 		}
 	}
-	
+
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
@@ -74,21 +74,28 @@ public class ClientService {
 		entity.setBirthDate(dto.getBirthDate());
 		entity.setChildren(dto.getChildren());
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findByIncome(Double income, PageRequest pageRequest) {
-		Page<Client> list =  repository.findByIncome(income, pageRequest);
+		Page<Client> list = repository.findByIncome(income, pageRequest);
 		return list.map(x -> new ClientDTO(x));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findByName(String name, PageRequest pageRequest) {
-		Page<Client> list =  repository.findByName(name, pageRequest);
+		Page<Client> list = repository.findByName(name, pageRequest);
 		return list.map(x -> new ClientDTO(x));
 	}
+
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findByBirthDateYear(Integer year, PageRequest pageRequest) {
-		Page<Client> list =  repository.findByBirthDateYear(year, pageRequest);
+		Page<Client> list = repository.findByBirthDateYear(year, pageRequest);
+		return list.map(x -> new ClientDTO(x));
+	}
+
+	@Transactional(readOnly = true)
+	public Page<ClientDTO> findByBirthDateAfterYear(Integer year, PageRequest pageRequest) {
+		Page<Client> list = repository.findByBirthDateAfterYear(year, pageRequest);
 		return list.map(x -> new ClientDTO(x));
 	}
 

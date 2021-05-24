@@ -27,6 +27,7 @@ public class ClientRepositoryTests {
 	private long countClientByIncome;
 	private long countClientByname;
 	private long countClientByBirthDateYear;
+	private long countClientByBirthDateAfterYear;
 	private Integer birthDateYear;
 	private Integer yearWithoutBirth;
 	private String existingName, nonExistingName, existingNameIgnoreCase, nameIsEmppty;
@@ -42,6 +43,7 @@ public class ClientRepositoryTests {
 		countClientByIncome = 5L;
 		countClientByname = 1L;
 		countClientByBirthDateYear = 1L;
+		countClientByBirthDateAfterYear = 9;
 		birthDateYear = 1949;
 		yearWithoutBirth = 1946;
 		nameIsEmppty = "";
@@ -87,19 +89,16 @@ public class ClientRepositoryTests {
 	/*Atividade: testes em JPA Repository*/
 	/*************************************/
 	
+	/* Find nome existente*/
+	
 	@Test
 	public void findByNameShouldReturnClientsWhenNameExists() {
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		Page<Client> result = repository.findByName(existingName, pageRequest);
 		Assertions.assertEquals(countClientByname, result.getTotalElements());
 	}
-	@Test
-	public void findByNameShouldReturnAllClientsWhenNameIsEmpty() {
-		PageRequest pageRequest = PageRequest.of(0, 10);
-		Page<Client> result = repository.findByName(nameIsEmppty, pageRequest);
-		Assertions.assertEquals(countTotalClients, result.getTotalElements());
-		Assertions.assertFalse(result.isEmpty());
-	}
+	
+	/* Find nome ignorando case*/
 	@Test
 	public void findByNameShouldReturnAllClientsWhenExistingNameIgnoreCase() {
 		PageRequest pageRequest = PageRequest.of(0, 10);
@@ -107,7 +106,17 @@ public class ClientRepositoryTests {
 		Assertions.assertEquals(countClientByname, result.getTotalElements());
 		Assertions.assertFalse(result.isEmpty());
 	}
-
+	
+	/* Find nome vazio*/
+	@Test
+	public void findByNameShouldReturnAllClientsWhenNameIsEmpty() {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		Page<Client> result = repository.findByName(nameIsEmppty, pageRequest);
+		Assertions.assertEquals(countTotalClients, result.getTotalElements());
+		Assertions.assertFalse(result.isEmpty());
+	}
+	
+	/* Find nome inexistente*/
 	@Test
 	public void findByNameShouldReturnEmptyWhenNameDoesNotExists() {
 			PageRequest pageRequest = PageRequest.of(0, 10);
@@ -115,18 +124,36 @@ public class ClientRepositoryTests {
 			Assertions.assertTrue(result.isEmpty());
 	}
 	
+	/* Find data maior que a referência*/
+	
+//	@Test
+//	public void findByBirthDateAfterYearShouldReturnClientsWhenClientBirthDateAfterToValue() {
+//		Integer year = 1948;
+//		PageRequest pageRequest = PageRequest.of(0, 10);
+//		Page<Client> result = repository.findByBirthDateAfterYear(year, pageRequest);
+//		Assertions.assertFalse(result.isEmpty());
+//		Assertions.assertEquals(countClientByBirthDateAfterYear, result.getTotalElements());
+//	}
+	
+	/* Find birthdate por ano*/
+	
 	@Test 
 	public void findByBirthdateShouldReturnClientThatYearIsEquals() {
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		Page<Client> result = repository.findByBirthDateYear(birthDateYear, pageRequest);
 		Assertions.assertEquals(countClientByBirthDateYear, result.getTotalElements());
 	}
+	
+	/* Find birthdate por ano sem correspondência*/
+	
 	@Test
 	public void findByBirthdateShouldReturnEmptyWhenNobodyClientToYear() {
 			PageRequest pageRequest = PageRequest.of(0, 10);
 			Page<Client> result = repository.findByBirthDateYear(yearWithoutBirth, pageRequest);
 			Assertions.assertTrue(result.isEmpty());
 	}
+	
+	/* update com id existente*/
 
 	@Test
 	public void updateShouldChangeAndPersistRegister() {
@@ -139,6 +166,8 @@ public class ClientRepositoryTests {
 		Assertions.assertTrue(result.isPresent());
 		Assertions.assertSame(result.get().getName(), "Carol");
 	}
+	
+	/*update com id inexistente*/
 	
 	@Test
 	public void updateShouldThrowExeptionWhenIdDoesNotExists() {

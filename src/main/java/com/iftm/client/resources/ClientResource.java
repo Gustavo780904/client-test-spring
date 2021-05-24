@@ -103,5 +103,18 @@ public class ClientResource {
 		Page<ClientDTO> list = service.findByBirthDateYear(year, pageRequest);
 		return ResponseEntity.ok().body(list);
 	}
+	
+	@GetMapping(value = "/find-by-birthdate-after-year")
+	public ResponseEntity<Page<ClientDTO>> findByBirthDateAfterYear(
+			@RequestParam(value = "birthdate", defaultValue = "")Integer year,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "13") Integer linesPerPage,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
+	{
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Page<ClientDTO> list = service.findByBirthDateYear(year, pageRequest);
+		return ResponseEntity.ok().body(list);
+	}
 
 }
