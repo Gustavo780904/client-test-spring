@@ -24,94 +24,87 @@ import com.iftm.client.services.ClientService;
 @RestController
 @RequestMapping(value = "/clients")
 public class ClientResource {
-	
+
 	@Autowired
 	private ClientService service;
 
 	@GetMapping
-	public ResponseEntity<Page<ClientDTO>> findAll(
-			@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ClientDTO>> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) 
-	{
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		Page<ClientDTO> list = service.findAllPaged(pageRequest);
 		return ResponseEntity.ok().body(list);
 	}
-	
+
 	@GetMapping(value = "/find-by-income")
 	public ResponseEntity<Page<ClientDTO>> findByIncome(
-			@RequestParam(value = "income", defaultValue = "")Double income,
+			@RequestParam(value = "income", defaultValue = "") Double income,
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
-	{
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		Page<ClientDTO> list = service.findByIncome(income, pageRequest);
-		return ResponseEntity.ok().body(list); 
+		return ResponseEntity.ok().body(list);
 	}
-	
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
 		ClientDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
 		dto = service.insert(dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(dto.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
-	
+
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 	}
-	
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
 	@GetMapping(value = "/find-by-name")
-	public ResponseEntity<Page<ClientDTO>> findByName(
-			@RequestParam(value = "name", defaultValue = "")String name,
+	public ResponseEntity<Page<ClientDTO>> findByName(@RequestParam(value = "name", defaultValue = "") String name,
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
-	{
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		Page<ClientDTO> list = service.findByName(name, pageRequest);
-		return ResponseEntity.ok().body(list); 
+		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/find-by-birthdateyear")
 	public ResponseEntity<Page<ClientDTO>> findByBirthDateYear(
-			@RequestParam(value = "birthdate", defaultValue = "")Integer year,
+			@RequestParam(value = "birthdate", defaultValue = "") Integer year,
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "13") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
-	{
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		Page<ClientDTO> list = service.findByBirthDateYear(year, pageRequest);
 		return ResponseEntity.ok().body(list);
 	}
-	
+
 	@GetMapping(value = "/find-by-birthdate-after-year")
 	public ResponseEntity<Page<ClientDTO>> findByBirthDateAfterYear(
-			@RequestParam(value = "birthdate", defaultValue = "")Integer year,
+			@RequestParam(value = "birthdate", defaultValue = "") Integer year,
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "13") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
-	{
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		Page<ClientDTO> list = service.findByBirthDateYear(year, pageRequest);
 		return ResponseEntity.ok().body(list);
