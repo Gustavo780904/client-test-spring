@@ -76,7 +76,6 @@ public class ClientServiceTests {
 		Mockito.when(repository.save(repository.getOne(existingId))).thenReturn(dto.toEntity());
 		Mockito.doThrow(ResourceNotFoundException.class).when(repository).getOne(nonExistingId);
 
-		
 	}
 	/*delete deveria retornar vazio quando o id existir */
 	
@@ -180,8 +179,8 @@ public class ClientServiceTests {
 		Mockito.verify(repository, Mockito.times(1)).save(dto.toEntity());
 	}
 	
-	
 	/*insert deveria retornar um ClientDTO ao inserir um novo cliente*/
+	
 	@Test
 	public void insertShouldReturnClientDTOWhenInsertNewClient() {
 		
